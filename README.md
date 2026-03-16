@@ -8,6 +8,7 @@ MCP server for managing localization strings in Google Sheets. Designed for use 
 |----------|----------|----------|----------|----------|----------|----------|----------|----------|
 | Feature header | Key | English | German | French | Spanish | Italian | Portuguese | Turkish |
 
+- **Row 1** is the header row (`Key`, `English`, `German`, etc.) — **never modify or delete it**
 - **Column A** contains feature/category headers (e.g., `// MainMenu`, `// General`, `Login`)
 - **Column B** contains string keys (e.g., `login_screen_title`)
 - **Columns C–I** contain translations per language
@@ -48,7 +49,7 @@ MCP server for managing localization strings in Google Sheets. Designed for use 
 2. Create a project (or use an existing one)
 3. Enable the **Google Sheets API** (APIs & Services → Enable APIs)
 4. Go to **IAM & Admin → Service Accounts** → Create a service account
-5. Create a JSON key for it (Actions → Manage Keys → Add Key → JSON) and save the file somewhere safe, e.g. `~/.config/gcloud/strings-sheet-sa.json`
+5. Create a JSON key for it (Actions → Manage Keys → Add Key → JSON) and save the file somewhere safe, e.g. `~/Developer/service-accounts/my-service-account.json`
 
 ### 2. Share your Google Sheet
 
@@ -67,23 +68,36 @@ npm run build
 
 ### 5. Configure in Claude Code
 
-Add to your `.claude.json` or `.claude/settings.json`:
+There are three scopes for MCP configuration in Claude Code:
+
+| Scope | File | Use case |
+|-------|------|----------|
+| **User** (recommended) | `~/.claude.json` → `mcpServers` key | Available across all projects |
+| **Project** (shared) | `.mcp.json` in project root | Shared with team via git |
+| **Project** (local) | `~/.claude.json` → `projects.<path>.mcpServers` | Private to you, per project |
+
+**Recommended: User-level config** — add to the top-level `mcpServers` key in `~/.claude.json`:
 
 ```json
 {
   "mcpServers": {
     "strings-sheet": {
+      "type": "stdio",
       "command": "node",
-      "args": ["/path/to/strings-sheet-mcp/dist/index.js"],
+      "args": ["/absolute/path/to/strings-sheet-mcp/dist/index.js"],
       "env": {
         "SPREADSHEET_ID": "your-spreadsheet-id",
-        "SERVICE_ACCOUNT_JSON_PATH": "/path/to/service-account.json",
+        "SERVICE_ACCOUNT_JSON_PATH": "/absolute/path/to/service-account.json",
         "SHEET_NAME": "Sheet1"
       }
     }
   }
 }
 ```
+
+> **Important:** The `env` values must be in the `env` object, not passed as `-e` flags in `args`. Use absolute paths for both the server script and the service account JSON.
+
+> **Note:** `~/.claude.json` contains other Claude Code settings — merge the `mcpServers` key into the existing file, don't overwrite it.
 
 Restart Claude Code and the tools will be available in your conversations.
 
