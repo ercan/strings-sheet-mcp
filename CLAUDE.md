@@ -44,7 +44,7 @@ The compiled entry point is `dist/index.js`.
          "env": {
            "SPREADSHEET_ID": "<your-spreadsheet-id>",
            "SERVICE_ACCOUNT_JSON_PATH": "/absolute/path/to/service-account.json",
-           "SHEET_NAME": "Sheet1"
+           "SHEET_NAME": "<exact-tab-name>"
          }
        }
      }
@@ -58,6 +58,7 @@ The compiled entry point is `dist/index.js`.
 - **Wrong config location:** The user-level MCP config goes in `~/.claude.json` (top-level `mcpServers` key), NOT in `~/.claude/.mcp.json`.
 - **Env vars as args:** Environment variables must be in the `env` object. Do NOT pass them as `-e` flags in `args`.
 - **Relative paths:** Use absolute paths for both the server script and the service account JSON file.
+- **Wrong sheet tab name:** `SHEET_NAME` must match the exact tab name at the bottom of the spreadsheet. Do not assume `Sheet1` — always ask the user for it.
 
 ## Environment Variables
 
@@ -65,7 +66,7 @@ The compiled entry point is `dist/index.js`.
 |----------|----------|-------------|
 | `SPREADSHEET_ID` | Yes | Google Sheet ID from the URL |
 | `SERVICE_ACCOUNT_JSON_PATH` | Yes | Absolute path to the service account JSON key file |
-| `SHEET_NAME` | No | Sheet tab name (defaults to `Sheet1`) |
+| `SHEET_NAME` | **Yes** | The exact name of the sheet tab (visible at the bottom of the spreadsheet). Must be provided — the default `Sheet1` will fail if the tab was renamed. Ask the user for this value. |
 
 ## Architecture
 

@@ -88,7 +88,7 @@ There are three scopes for MCP configuration in Claude Code:
       "env": {
         "SPREADSHEET_ID": "your-spreadsheet-id",
         "SERVICE_ACCOUNT_JSON_PATH": "/absolute/path/to/service-account.json",
-        "SHEET_NAME": "Sheet1"
+        "SHEET_NAME": "your-sheet-tab-name"
       }
     }
   }
@@ -107,4 +107,4 @@ Restart Claude Code and the tools will be available in your conversations.
 |----------|----------|-------------|
 | `SPREADSHEET_ID` | Yes | Google Sheet ID from the URL |
 | `SERVICE_ACCOUNT_JSON_PATH` | Yes | Path to the service account JSON key file |
-| `SHEET_NAME` | No | Sheet tab name (defaults to `Sheet1`) |
+| `SHEET_NAME` | **Yes** | The exact name of the sheet tab (visible at the bottom of the spreadsheet). Do **not** rely on the default `Sheet1` — it will fail if the tab was renamed. |
