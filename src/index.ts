@@ -202,17 +202,9 @@ async function insertRows(
 }
 
 async function appendRows(rows: (string | undefined)[][]): Promise<void> {
-  const sheets = getSheetsClient();
-
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_NAME}!A1`,
-    valueInputOption: "RAW",
-    insertDataOption: "INSERT_ROWS",
-    requestBody: {
-      values: rows,
-    },
-  });
+  const data = await getSheetData();
+  const lastRow = data.rows.length;
+  await insertRows(lastRow, rows);
 }
 
 // --- MCP Server ---
